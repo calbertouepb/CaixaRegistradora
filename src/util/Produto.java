@@ -1,38 +1,34 @@
 /**
- * Pacote de classes utilitárias
+ * File:Produto.java
  */
 package util;
 
 /* Aluno: Carlos Alberto de Amorim Porto - 121085031  */
 
 /**
- * Um produto disponível no restaurante
+ * 
+ * Um produto disponivel no restaurante
  * 
  * @author carlos
  *
  */
-public class Produto {
-	/**
-	 * O código de identificação do produto
-	 */
+public class Produto implements ItemDoRestaurante {
+	
+	//O codigo de identificacao do produto
 	private int codigo;
 	
-	/**
-	 * A descrição do produto
-	 */
+	//A descricao do produto
 	private String descricao;
 	
-	/**
-	 * O preço unitário do produto
-	 */
+	//O preco unitario do produto
 	private double preco;
 
 	/**
 	 * Um produto completamente caracterizado
 	 * 
-	 * @param codigo O código de identificação do produto
-	 * @param descricao A descrição do produto
-	 * @param preco O preço unitário do produto
+	 * @param codigo O codigo de identificacao do produto
+	 * @param descricao A descricao do produto
+	 * @param preco O preco unitario do produto
 	 */
 	public Produto(int codigo, String descricao, double preco) {
 		this.setCodigo(codigo);
@@ -41,48 +37,48 @@ public class Produto {
 	}
 	
 	/**
-	 * Retorna o código de identificação do produto
-	 * @return O código de identificação do produto
+	 * Retorna o codigo de identificacao do produto
+	 * @return O codigo de identificacao do produto
 	 */
 	public int getCodigo() {
 		return codigo;
 	}
 	
 	/**
-	 * Modifica o código de identificação do produto
-	 * @param codigo O novo código de identificação do produto
+	 * Modifica o codigo de identificacao do produto
+	 * @param codigo O novo codigo de identificacao do produto
 	 */
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
 	
 	/**
-	 * Retorna a descrição do produto
-	 * @return A descrição do produto
+	 * Retorna a descricao do produto
+	 * @return A descricao do produto
 	 */
 	public String getDescricao() {
 		return descricao;
 	}
 
 	/**
-	 * Modifica a descrição do produto
-	 * @param descricao A nova descrição do produto
+	 * Modifica a descricao do produto
+	 * @param descricao A nova descricao do produto
 	 */
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 	
 	/**
-	 * Retorna o preço unitário do produto
-	 * @return O preço unitário do produto
+	 * Retorna o preco unitario do produto
+	 * @return O preco unitario do produto
 	 */
 	public double getPreco() {
 		return preco;
 	}
 	
 	/**
-	 * Modifica o preço unitário do produto
-	 * @param preco O novo preço unitário do produto
+	 * Modifica o preco unitario do produto
+	 * @param preco O novo preco unitario do produto
 	 */
 	public void setPreco(double preco) {
 		this.preco = preco;

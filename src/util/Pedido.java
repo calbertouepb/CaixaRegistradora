@@ -1,30 +1,28 @@
 /**
- * Pacote de classes utilitárias
+ * File:Pedido.java
  */
 package util;
 
 /* Aluno: Carlos Alberto de Amorim Porto - 121085031  */
 
 /**
- * Um pedido ao garçon, composto de produtos disponíveis no restaurante
+ * 
+ * Um pedido ao garcon, composto de produtos disponiveis no restaurante
  * 
  * @author carlos
  *
  */
 public class Pedido {
-	/**
-	 * Número identificador do pedido
-	 */
+	
+	//Numero identificador do pedido
 	private int numeroDoPedido;
 	
-	/**
-	 * Listagem dos produtos consumidos
-	 */
+	//Listagem dos produtos consumidos
 	private Produto[] produtosConsumidos;
 	
 	/**
 	 * Pedido numerado e preenchido
-	 * @param numero O número do pedido
+	 * @param numero O numero do pedido
 	 * @param produtosConsumidos Uma lista com os produtos consumidos
 	 */
 	public Pedido(int numero, Produto[] produtosConsumidos){
@@ -33,16 +31,16 @@ public class Pedido {
 	}
 
 	/**
-	 * Retorna o número do pedido
-	 * @return O número do pedido
+	 * Retorna o numero do pedido
+	 * @return O numero do pedido
 	 */
 	public int getNumero() {
 		return numeroDoPedido;
 	}
 
 	/**
-	 * Modifica o número do pedido
-	 * @param numero O novo número do pedido
+	 * Modifica o numero do pedido
+	 * @param numero O novo numero do pedido
 	 */
 	public void setNumero(int numero) {
 		this.numeroDoPedido = numero;

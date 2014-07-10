@@ -1,38 +1,33 @@
 /**
- * Pacote de classes utilitárias
+ * File:Garcon.java
  */
 package util;
 
 /* Aluno: Carlos Alberto de Amorim Porto - 121085031  */
 
 /**
- * Um garçon do restaurante
+ * 
+ * Um garcon do restaurante
  * 
  * @author carlos
- *
+ * 
  */
-public class Garcon {
+public class Garcon implements ItemDoRestaurante {
 	
-	/**
-	 * O código de identificação do garçon
-	 */
+	//O codigo de identificação do garcon
 	private int codigo;
 	
-	/**
-	 * O nome do garçon
-	 */
+	//O nome do garcon
 	private String nome;
 	
-	/**
-	 * Total de gorjeta acumulada pelo garçon
-	 */
+	//Total de gorjeta acumulada pelo garcon
 	private double gorjeta;
 	
 	/**
-	 * Um garçon com seu código de identificação
+	 * Um garcon com seu codigo de identificação
 	 * 
-	 * @param codigo O código de identificação do garçon
-	 * @param nome O nome do garçon
+	 * @param codigo O codigo de identificação do garcon
+	 * @param nome O nome do garcon
 	 */
 	public Garcon(int codigo, String nome) {
 		this.setCodigo(codigo);
@@ -41,39 +36,39 @@ public class Garcon {
 	}
 	
 	/**
-	 * Retorna o código de identificação do garçon
-	 * @return O código de identificação do garçon
+	 * Retorna o codigo de identificação do garcon
+	 * @return O codigo de identificação do garcon
 	 */
 	public int getCodigo() {
 		return codigo;
 	}
 	
 	/**
-	 * Modifica o código de identificação do garçon
-	 * @param codigo O novo código de identificação do garçon
+	 * Modifica o codigo de identificação do garcon
+	 * @param codigo O novo codigo de identificação do garcon
 	 */
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
 	
 	/**
-	 * Retorna o nome do garçon
-	 * @return O nome do garçon
+	 * Retorna o nome do garcon
+	 * @return O nome do garcon
 	 */
 	public String getNome() {
 		return nome;
 	}
 	
 	/**
-	 * Modifica o nome do garçon
-	 * @param nome O novo nome do garçon
+	 * Modifica o nome do garcon
+	 * @param nome O novo nome do garcon
 	 */
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 	
 	/**
-	 * Retorna o total de gorjeta acumulada pelo garçon durante o dia
+	 * Retorna o total de gorjeta acumulada pelo garcon durante o dia
 	 * @return O total de gorjeta aculmulada
 	 */
 	public double getGorjeta(){
@@ -81,8 +76,8 @@ public class Garcon {
 	}
 	
 	/**
-	 * Modifica o total de gorjetas acumuladas pelo garçon durante o dia
-	 * @param novaGorjeta A nova gorjeta recebida pelo garçon
+	 * Modifica o total de gorjetas acumuladas pelo garcon durante o dia
+	 * @param novaGorjeta A nova gorjeta recebida pelo garcon
 	 */
 	public void setGorjeta(double novaGorjeta){
 		this.gorjeta += novaGorjeta;

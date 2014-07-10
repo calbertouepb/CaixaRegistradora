@@ -1,5 +1,5 @@
 /**
- * Pacote de classes gerenciais
+ * File:Escritorio.java
  */
 package manage;
 
@@ -8,96 +8,110 @@ import java.util.List;
 import java.util.Scanner;
 
 import util.Garcon;
+import util.ItemDoRestaurante;
 
 /* Aluno: Carlos Alberto de Amorim Porto - 121085031  */
 
 /**
- * Responsável por gerenciar os funcionários do restaurante.
+ * 
+ * Responsavel por gerenciar os funcionarios do restaurante.
+ * 
  * @author carlos
  *
  */
 public class Escritorio {
+
+	//Entrada de dados
 	private static Scanner entrada = new Scanner(System.in);
 
 	/**
-	 * Cadastra um garçon no restaurante.
+	 * Cadastra um garcon no restaurante.
 	 * 
-	 * @param listaDeGarconsDoRestaurante A lista de garçons do restaurante
+	 * @param listaDeGarconsDoRestaurante A lista de garcons do restaurante
+	 * 
+	 * @return true caso a operacao seja realizada com sucesso. false caso o novo
+	 * garcon a adicionar ja exista.
 	 */
-	public static void cadastrarGarcon(List<Garcon> listaDeGarconsDoRestaurante) {
+	public static boolean cadastrarGarcon(List<ItemDoRestaurante> listaDeGarconsDoRestaurante) {
 
-		// TODO Substituir pela janela de cadastro de garçons
+		// TODO Substituir pela janela de cadastro de garcons
 
-		System.out.println("Código do garçon: ");
+		System.out.println("Codigo do garcon: ");
 		int codigo = entrada.nextInt();
-		System.out.println("Nome do garçon: ");
+		System.out.println("Nome do garcon: ");
 		String nome = entrada.next();
-		listaDeGarconsDoRestaurante.add(new Garcon(codigo, nome));
+		Garcon novoGarcon = new Garcon(codigo, nome);
+		if(!listaDeGarconsDoRestaurante.contains(novoGarcon)){
+			listaDeGarconsDoRestaurante.add(novoGarcon);
+			return true;
+		}
+		return false;
 	}
-	
-	
+
 	/**
-	 * Edita as informações de um garçon do restaurante.
+	 * Edita as informacoes de um garcon do restaurante.
 	 * 
-	 * @param listaDeGarconsDoRestaurante A lista de garçons do restaurante
+	 * @param listaDeGarconsDoRestaurante A lista de garcons do restaurante
+	 * 
+	 * @return true caso a operacao seja realizada com sucesso. false caso o
+	 * garcon a editar nao exista.
 	 */
-	public static void editarGarcon(List<Garcon> listaDeGarconsDoRestaurante) {
+	public static boolean editarGarcon(List<ItemDoRestaurante> listaDeGarconsDoRestaurante) {
 
-		// TODO Substituir pela janela de edição de garçons
+		// TODO Substituir pela janela de edicao de garcons
 
-		System.out.println("Código do garçon: ");
+		System.out.println("Codigo do garcon: ");
 		int codigo = entrada.nextInt();
-		System.out.println("Novo nome do garçon: ");
-		String novoNome = entrada.next();
-		Garcon garcon = new Garcon(codigo, novoNome);
+		Garcon garcon = new Garcon(codigo,"");
 		if(listaDeGarconsDoRestaurante.contains(garcon)){
+			System.out.println("Novo nome do garcon: ");
+			String novoNome = entrada.next();
+			garcon = new Garcon(codigo, novoNome);
 			listaDeGarconsDoRestaurante.set(listaDeGarconsDoRestaurante.indexOf(garcon), garcon);
+			return true;
 		}
-		else{
-			System.out.println("Garçon não cadastrado.");
-		}
+		return false;
 	}
-	
+
 	/**
-	 * Remove um garçon do restaurante.
+	 * Remove um garcon do restaurante.
 	 * 
-	 * @param listaDeGarconsDoRestaurante A lista de garçons do restaurante
+	 * @param listaDeGarconsDoRestaurante A lista de garcons do restaurante
+	 * 
+	 * @return true se a operacao foi realizada com sucesso. false caso o garcon
+	 * a remover nao exista.
 	 */
-	public static void excluirGarcon(List<Garcon> listaDeGarconsDoRestaurante) {
+	public static boolean excluirGarcon(List<ItemDoRestaurante> listaDeGarconsDoRestaurante) {
 
-		// TODO Substituir pela janela de remoção de garçons
+		// TODO Substituir pela janela de remocao de garcons
 
-		System.out.println("Código do garçon: ");
+		System.out.println("Codigo do garcon: ");
 		int codigo = entrada.nextInt();
 		Garcon garcon = new Garcon(codigo, "");
 		if(listaDeGarconsDoRestaurante.contains(garcon)){
 			listaDeGarconsDoRestaurante.remove(garcon);
+			return true;
 		}
-		else{
-			System.out.println("Garçon não cadastrado.");
-		}
+		return false;
 	}
 
 	/**
-	 * Lista todos os garçons do restaurante
+	 * Lista todos os garcons do restaurante
 	 * 
-	 * @param listaDeGarconsDoRestaurante A lista de garçons do restaurante
+	 * @param listaDeGarconsDoRestaurante A lista de garcons do restaurante
 	 */
-	public static void listarGarcons(List<Garcon> listaDeGarconsDoRestaurante) {
-		
-		// TODO Substituir pela janela de listagem de garçons
-		
+	public static void listarGarcons(List<ItemDoRestaurante> listaDeGarconsDoRestaurante) {
+
+		// TODO Substituir pela janela de listagem de garcons
+
 		if(listaDeGarconsDoRestaurante.size() > 0){
-			Iterator<Garcon> iterador = listaDeGarconsDoRestaurante.iterator();
+			Iterator<ItemDoRestaurante> iterador = listaDeGarconsDoRestaurante.iterator();
 			Garcon garcon = null;
 			while(iterador.hasNext()){
-				garcon = iterador.next();
+				garcon = (Garcon) iterador.next();
 				System.out.println(garcon.getCodigo() + " - " + garcon.getNome());
 			}
 		}
-		else
-			System.out.println("Não há garçons cadastrados.");
-		
 	}
 
 }
