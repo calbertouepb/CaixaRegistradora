@@ -94,6 +94,6 @@ public class Garcon implements ItemDoRestaurante {
 
 	@Override
 	public String toString() {
-		return "" + getCodigo() + " - " + getNome();
+		return "" + getCodigo() + "-" + getNome();
 	}	
 }

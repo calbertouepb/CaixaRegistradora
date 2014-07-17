@@ -95,6 +95,6 @@ public class Produto implements ItemDoRestaurante {
 
 	@Override
 	public String toString() {
-		return "" + this.getCodigo() + " - " + this.getDescricao() + ": R$(und) " + this.getPreco();
+		return "" + this.getCodigo() + "-" + this.getDescricao() + "-" + this.getPreco();
 	}
 }

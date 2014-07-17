@@ -16,5 +16,7 @@ import util.ItemDoRestaurante;
 public interface Arquivavel {
 	
 	public abstract boolean salvaLista(List<ItemDoRestaurante> lista);
+	public abstract List<ItemDoRestaurante> carregaListaDeProdutos();
+	public abstract List<ItemDoRestaurante> carregaListaDeGarcons();
 
 }
