@@ -7,14 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
-import java.util.StringTokenizer;
-
-import javax.swing.JOptionPane;
-
 import util.Garcon;
 import util.ItemDoRestaurante;
 import util.Produto;
