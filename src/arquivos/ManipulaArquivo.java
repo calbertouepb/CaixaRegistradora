@@ -7,8 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.swing.JOptionPane;
+
 import util.Garcon;
 import util.ItemDoRestaurante;
 import util.Produto;
@@ -76,7 +80,6 @@ public class ManipulaArquivo implements Arquivavel{
 			
 			
 		} catch (IOException e) {
-			e.printStackTrace();
 			return false;
 		}
 		
@@ -92,9 +95,11 @@ public class ManipulaArquivo implements Arquivavel{
 		List <ItemDoRestaurante> lista= new ArrayList<ItemDoRestaurante>();
 		ItemDoRestaurante produto;
 		
-		File arquivo = new File("Produto.txt");//abre o arquivo
-		Scanner input;
+		
 		try {
+			File arquivo = new File("Produto.txt");//abre o arquivo
+			Scanner input;
+			
 			input = new Scanner(arquivo).useDelimiter("\\-");//instancia o scanner para leitura do arquivo separado pelo delimitador -
 			
 			while(input.hasNext()){
@@ -106,9 +111,12 @@ public class ManipulaArquivo implements Arquivavel{
 			}
 			
 			input.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (FileNotFoundException fileNotFoundException) {
+			JOptionPane.showMessageDialog(null, "Arquivo não encontrado!");
+			return null;
+		} catch(InputMismatchException inputMismatchException){
+			JOptionPane.showMessageDialog(null, "Erro ao carregar arquivo");
+			return null;
 		}
 		
 		
@@ -135,10 +143,13 @@ public class ManipulaArquivo implements Arquivavel{
 				}
 				
 				input.close();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
+			}catch (FileNotFoundException fileNotFoundException) {
+				JOptionPane.showMessageDialog(null, "Arquivo não encontrado!");
+				return null;
+			} catch(InputMismatchException inputMismatchException){
+				JOptionPane.showMessageDialog(null, "Erro ao carregar arquivo");
+				return null;
+			}
 			
 			return lista;
 		
