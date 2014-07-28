@@ -3,6 +3,7 @@
  */
 package manage;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -22,7 +23,10 @@ import util.ItemDoRestaurante;
 public class Escritorio {
 
 	//Entrada de dados
-	private static Scanner entrada = new Scanner(System.in);
+	private static Scanner entradaInteiro = new Scanner(System.in);
+	private static Scanner entradaTexto = new Scanner(System.in);
+	
+	public static List<Integer> garconsCadastrados = new ArrayList<Integer>();
 
 	/**
 	 * Cadastra um garcon no restaurante.
@@ -34,17 +38,17 @@ public class Escritorio {
 	 */
 	public static boolean cadastrarGarcon(List<ItemDoRestaurante> listaDeGarconsDoRestaurante) {
 
-		// TODO Substituir pela janela de cadastro de garcons
-
 		System.out.println("Codigo do garcon: ");
-		int codigo = entrada.nextInt();
+		int codigo = entradaInteiro.nextInt();
 		System.out.println("Nome do garcon: ");
-		String nome = entrada.next();
+		String nome = entradaTexto.nextLine();
 		Garcon novoGarcon = new Garcon(codigo, nome);
 		if(!listaDeGarconsDoRestaurante.contains(novoGarcon)){
 			listaDeGarconsDoRestaurante.add(novoGarcon);
+			garconsCadastrados.add(codigo);
 			return true;
 		}
+		System.out.println("Ja existe garcon cadastrado com esse codigo.");
 		return false;
 	}
 
@@ -58,18 +62,17 @@ public class Escritorio {
 	 */
 	public static boolean editarGarcon(List<ItemDoRestaurante> listaDeGarconsDoRestaurante) {
 
-		// TODO Substituir pela janela de edicao de garcons
-
 		System.out.println("Codigo do garcon: ");
-		int codigo = entrada.nextInt();
+		int codigo = entradaInteiro.nextInt();
 		Garcon garcon = new Garcon(codigo,"");
 		if(listaDeGarconsDoRestaurante.contains(garcon)){
 			System.out.println("Novo nome do garcon: ");
-			String novoNome = entrada.next();
+			String novoNome = entradaTexto.nextLine();
 			garcon = new Garcon(codigo, novoNome);
 			listaDeGarconsDoRestaurante.set(listaDeGarconsDoRestaurante.indexOf(garcon), garcon);
 			return true;
 		}
+		System.out.println("Nao existe garcon cadastrado com esse codigo.");
 		return false;
 	}
 
@@ -83,15 +86,15 @@ public class Escritorio {
 	 */
 	public static boolean excluirGarcon(List<ItemDoRestaurante> listaDeGarconsDoRestaurante) {
 
-		// TODO Substituir pela janela de remocao de garcons
-
 		System.out.println("Codigo do garcon: ");
-		int codigo = entrada.nextInt();
+		int codigo = entradaInteiro.nextInt();
 		Garcon garcon = new Garcon(codigo, "");
 		if(listaDeGarconsDoRestaurante.contains(garcon)){
 			listaDeGarconsDoRestaurante.remove(garcon);
+			garconsCadastrados.remove(codigo);
 			return true;
 		}
+		System.out.println("Nao existe garcon cadastrado com esse codigo.");
 		return false;
 	}
 
@@ -102,16 +105,16 @@ public class Escritorio {
 	 */
 	public static void listarGarcons(List<ItemDoRestaurante> listaDeGarconsDoRestaurante) {
 
-		// TODO Substituir pela janela de listagem de garcons
-
 		if(listaDeGarconsDoRestaurante.size() > 0){
 			Iterator<ItemDoRestaurante> iterador = listaDeGarconsDoRestaurante.iterator();
 			Garcon garcon = null;
 			while(iterador.hasNext()){
 				garcon = (Garcon) iterador.next();
-				System.out.println(garcon.getCodigo() + " - " + garcon.getNome());
+				System.out.printf("%03d - %s%n", garcon.getCodigo(), garcon.getNome());
 			}
 		}
+		else
+			System.out.println("Nao existem garcons a serem exibidos.");
 	}
 
 }

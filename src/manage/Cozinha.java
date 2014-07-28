@@ -3,6 +3,7 @@
  */
 package manage;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -22,7 +23,11 @@ import util.Produto;
 public class Cozinha {
 	
 	//Entrada de dados
-	private static Scanner entrada = new Scanner(System.in);
+	private static Scanner entradaInteiro = new Scanner(System.in);
+	private static Scanner entradaTexto = new Scanner(System.in);
+	private static Scanner entradaDouble = new Scanner(System.in);
+	
+	public static List<Integer> produtosCadastrados = new ArrayList<Integer>();
 	
 	/**
 	 * Cadastra um novo produto no restaurante.
@@ -33,20 +38,20 @@ public class Cozinha {
 	 * a adicionar já exista.
 	 */
 	public static boolean cadastrarProduto(List<ItemDoRestaurante> listaDeProdutosCadastrados) {
-
-		// TODO Substituir pela janela de cadastro de produtos
-
+		
 		System.out.println("Codigo do produto: ");
-		int codigo = entrada.nextInt();
+		int codigo = entradaInteiro.nextInt();
 		System.out.println("Descricao do produto: ");
-		String descricao = entrada.next();
+		String descricao = entradaTexto.nextLine();
 		System.out.println("Preco unitario: ");
-		double precoUnitario = Double.parseDouble(entrada.next());
+		double precoUnitario = entradaDouble.nextDouble();
 		Produto novoProduto = new Produto(codigo, descricao, precoUnitario);
 		if(!listaDeProdutosCadastrados.contains(novoProduto)){
 			listaDeProdutosCadastrados.add(novoProduto);
+			produtosCadastrados.add(codigo);
 			return true;
 		}
+		System.out.println("Ja existe produto cadastrado com esse codigo.");
 		return false;
 	}
 
@@ -60,19 +65,18 @@ public class Cozinha {
 	 */
 	public static boolean editarProduto(List<ItemDoRestaurante> listaDeProdutosCadastrados) {
 
-		// TODO Substituir pela janela de edição de produtos
-
 		System.out.println("Codigo do produto: ");
-		int codigo = entrada.nextInt();
+		int codigo = entradaInteiro.nextInt();
 		System.out.println("Nova descricao do produto: ");
-		String novaDescricao = entrada.next();
+		String novaDescricao = entradaTexto.nextLine();
 		System.out.println("Novo preco unitario: ");
-		double novoPreco = Double.parseDouble(entrada.next());
+		double novoPreco = entradaDouble.nextDouble();
 		Produto novoProduto = new Produto(codigo, novaDescricao, novoPreco);
 		if(listaDeProdutosCadastrados.contains(novoProduto)){
 			listaDeProdutosCadastrados.set(listaDeProdutosCadastrados.indexOf(novoProduto), novoProduto);
 			return true;
 		}
+		System.out.println("Nao existe produto cadastrado com esse codigo.");
 		return false;
 	}
 
@@ -86,15 +90,15 @@ public class Cozinha {
 	 */
 	public static boolean excluirProduto(List<ItemDoRestaurante> listaDeProdutosCadastrados) {
 
-		// TODO Substituir pela janela de remoção de produtos
-
 		System.out.println("Codigo do produto: ");
-		int codigo = entrada.nextInt();
+		int codigo = entradaInteiro.nextInt();
 		Produto produto = new Produto(codigo, "", 0.0);
 		if(listaDeProdutosCadastrados.contains(produto)){
 			listaDeProdutosCadastrados.remove(produto);
+			produtosCadastrados.remove(codigo);
 			return true;
 		}
+		System.out.println("Nao existe produto cadastrado com esse codigo.");
 		return false;
 	}
 
@@ -105,16 +109,16 @@ public class Cozinha {
 	 */
 	public static void listarProdutos(List<ItemDoRestaurante> listaDeProdutosCadastrados){
 
-		// TODO Substituir pela janela de listagem de produtos
-
 		if(listaDeProdutosCadastrados.size() > 0){
 			Iterator<ItemDoRestaurante> iterador = listaDeProdutosCadastrados.iterator();
 			Produto produto = null;
 			while(iterador.hasNext()){
 				produto = (Produto) iterador.next();
-				System.out.println(produto.getCodigo() + " - " + produto.getDescricao() + ": R$ " + produto.getPreco());
+				System.out.printf("%03d - %s: R$ %.2f%n", produto.getCodigo(), produto.getDescricao(), produto.getPreco());
 			}
 		}
+		else
+			System.out.println("Nao existem produtos a serem exibidos.");
 	}
 
 }

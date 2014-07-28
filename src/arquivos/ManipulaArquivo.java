@@ -13,11 +13,14 @@ import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
+import manage.Cozinha;
+import manage.Escritorio;
 import util.Garcon;
 import util.ItemDoRestaurante;
 import util.Produto;
 
 /**
+ * Salva e recupera as informacoes persistentes do programa em arquivos de texto.
  * 
  * @author Talles Henrique
  *
@@ -30,12 +33,10 @@ public class ManipulaArquivo implements Arquivavel{
 	File fileGarcon = new File(arquivoGarcon);
 	File fileProduto = new File(arquivoProduto);
 
-	/* (non-Javadoc)
-	 * @see arquivos.Arquivavel#salvaLista(java.util.List)
-	 */
-	
 	/**
-	 * @param lista recebe uma lista de produtos ou garcons para salvar em arquivo
+	 * Salva os itens da lista recebida como parametro em arquivo.
+	 * 
+	 * @param lista A lista de itens do restaurante para salvar em arquivo
 	 * @return true se for salvo com sucesso
 	 */
 	@Override
@@ -57,9 +58,10 @@ public class ManipulaArquivo implements Arquivavel{
 	}//fim do metodo salva lista
 	
 	/**
+	 * Escreve as informacoes da lista no arquivo especificado.
 	 * 
-	 * @param lista recebe a lista de ItemDoRestaurante para arquivar
-	 * @param arquivo recebe o nome do arquivo que vai gerenciar
+	 * @param lista A lista de ItemDoRestaurante para arquivar
+	 * @param arquivo O nome do arquivo que vai gerenciar
 	 * @return true se der tudo certo
 	 */
 	private boolean arquiva(List<ItemDoRestaurante> lista, File arquivo) {
@@ -88,19 +90,19 @@ public class ManipulaArquivo implements Arquivavel{
 	}//Fim do metodo arquiva
 
 	/**
-	 * @return retorna a lista de ItemDoRestaurante para ser carregado na inicializacao do programa
+	 * Retorna as informacoes dos produtos do restaurante.
+	 * 
+	 * @return A lista de produtos para ser carregada na inicializacao do programa
 	 */
 	public List<ItemDoRestaurante> carregaListaDeProdutos() {
 		
 		List <ItemDoRestaurante> lista= new ArrayList<ItemDoRestaurante>();
 		ItemDoRestaurante produto;
-		Scanner input = null;
-		
 		
 		try {
 			File arquivo = new File("Produto.txt");//abre o arquivo
 			
-			input = new Scanner(arquivo).useDelimiter("\\-");//instancia o scanner para leitura do arquivo separado pelo delimitador -
+			Scanner input = new Scanner(arquivo).useDelimiter("\\-");//instancia o scanner para leitura do arquivo separado pelo delimitador -
 			
 			while(input.hasNext()){
 				
@@ -108,7 +110,9 @@ public class ManipulaArquivo implements Arquivavel{
 				
 				produto = new Produto(Integer.parseInt(dados[0]), dados[1],Double.parseDouble(dados[2])); //cria um novo objeto produto
 				lista.add(produto);	//adiciona o produto criado a lista de Produtos
+				Cozinha.produtosCadastrados.add(Integer.parseInt(dados[0]));
 			}
+			input.close();
 			
 		} catch (FileNotFoundException fileNotFoundException) {
 			JOptionPane.showMessageDialog(null, "Arquivo nao encontrado!");
@@ -116,8 +120,6 @@ public class ManipulaArquivo implements Arquivavel{
 		} catch(InputMismatchException inputMismatchException){
 			JOptionPane.showMessageDialog(null, "Erro ao carregar arquivo");
 			return null;
-		}finally{
-			input.close();
 		}
 		
 		
@@ -126,7 +128,9 @@ public class ManipulaArquivo implements Arquivavel{
 	}//fim do metodo carrega lista de produtos
 
 	/**
-	 * @return lista de ItemDeContato garcon para ser carregado no programa
+	 * Retorna as informacoes dos garcons do restaurante.
+	 * 
+	 * @return A lista de garcons para ser carregada no programa
 	 */
 	public List<ItemDoRestaurante> carregaListaDeGarcons() {
 		
@@ -141,6 +145,7 @@ public class ManipulaArquivo implements Arquivavel{
 					
 					garcon = new Garcon(Integer.parseInt(input.next()), input.nextLine().replace("-",""));//cria um novo objeto garcon
 					lista.add(garcon);//adiciona o objeto garcon a lista
+					Escritorio.garconsCadastrados.add(((Garcon) garcon).getCodigo());
 				}
 				
 				input.close();

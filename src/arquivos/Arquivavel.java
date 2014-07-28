@@ -8,6 +8,8 @@ import java.util.List;
 import util.ItemDoRestaurante;
 
 /**
+ * Prove metodos para a manipulacao de arquivos de texto.
+ * 
  * @author talles
  *
  */
