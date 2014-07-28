@@ -7,7 +7,7 @@ package util;
 
 /**
  * 
- * Um pedido ao garcon, composto de produtos disponiveis no restaurante
+ * Um pedido composto de produtos disponiveis no restaurante
  * 
  * @author carlos
  *
@@ -17,16 +17,21 @@ public class Pedido {
 	//Numero identificador do pedido
 	private int numeroDoPedido;
 	
+	//Codigo do garcon que anotou o pedido
+	private int codigoDoGarcon;
+	
 	//Listagem dos produtos consumidos
 	private Produto[] produtosConsumidos;
 	
 	/**
 	 * Pedido numerado e preenchido
 	 * @param numero O numero do pedido
+	 * @param codigo O codigo do garcon que anotou o pedido
 	 * @param produtosConsumidos Uma lista com os produtos consumidos
 	 */
-	public Pedido(int numero, Produto[] produtosConsumidos){
+	public Pedido(int numero, int garcon, Produto[] produtosConsumidos){
 		this.setNumero(numero);
+		this.setCodigoDoGarcon(garcon);
 		this.setProdutosConsumidos(produtosConsumidos);
 	}
 
@@ -44,6 +49,22 @@ public class Pedido {
 	 */
 	public void setNumero(int numero) {
 		this.numeroDoPedido = numero;
+	}
+
+	/**
+	 * Retorna o codigo do garcon que anotou o pedido.
+	 * @return O codigo do garcon que anotou o pedido
+	 */
+	public int getCodigoDoGarcon() {
+		return codigoDoGarcon;
+	}
+
+	/**
+	 * Modifica o codigo do garcon
+	 * @param codigoDoGarcon O novo codigo do garcon
+	 */
+	public void setCodigoDoGarcon(int codigoDoGarcon) {
+		this.codigoDoGarcon = codigoDoGarcon;
 	}
 
 	/**
@@ -77,6 +98,6 @@ public class Pedido {
 		for(int i = 0; i < produtosConsumidos.length; i++){
 			listagem += produtosConsumidos[i].toString() + "\n";
 		}
-		return "Pedido Nº: " + this.getNumero() + "\n" + listagem;
+		return "Pedido Nº: " + this.getNumero() + System.lineSeparator() + "Garcon: " + this.getCodigoDoGarcon() + System.lineSeparator() + listagem;
 	}
 }

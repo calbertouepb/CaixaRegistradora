@@ -24,7 +24,7 @@ import util.Produto;
  */
 public class ManipulaArquivo implements Arquivavel{
 
-	private String arquivoGarcon = "garcons.txt";
+	private String arquivoGarcon = "Garcons.txt";
 	private String arquivoProduto = "Produto.txt";
 	
 	File fileGarcon = new File(arquivoGarcon);
@@ -35,16 +35,16 @@ public class ManipulaArquivo implements Arquivavel{
 	 */
 	
 	/**
-	 * @param lista recebe uma lista de produtos ou garçons para salvar em arquivo
+	 * @param lista recebe uma lista de produtos ou garcons para salvar em arquivo
 	 * @return true se for salvo com sucesso
 	 */
 	@Override
 	public boolean salvaLista(List<ItemDoRestaurante> lista) {
 		
-		//Verifica se a lista é maior que zero
+		//Verifica se a lista e maior que zero
 		if(!lista.isEmpty()){	
 			
-			//verifica se é instancia de garcon ou de Produto e retorna o resultado
+			//verifica se e instancia de garcon ou de Produto e retorna o resultado
 			if(lista.get(0) instanceof Garcon){
 				return arquiva(lista, fileGarcon);
 			}else if(lista.get(0) instanceof Produto){
@@ -54,7 +54,7 @@ public class ManipulaArquivo implements Arquivavel{
 		
 		return false;
 			
-	}//fim do método salva lista
+	}//fim do metodo salva lista
 	
 	/**
 	 * 
@@ -85,20 +85,20 @@ public class ManipulaArquivo implements Arquivavel{
 		
 		return true;	
 			
-	}//Fim do método arquiva
+	}//Fim do metodo arquiva
 
 	/**
-	 * @return retorna a lista de ItemDoRestaurante para ser carregado na inicialização do programa
+	 * @return retorna a lista de ItemDoRestaurante para ser carregado na inicializacao do programa
 	 */
 	public List<ItemDoRestaurante> carregaListaDeProdutos() {
 		
 		List <ItemDoRestaurante> lista= new ArrayList<ItemDoRestaurante>();
 		ItemDoRestaurante produto;
+		Scanner input = null;
 		
 		
 		try {
 			File arquivo = new File("Produto.txt");//abre o arquivo
-			Scanner input;
 			
 			input = new Scanner(arquivo).useDelimiter("\\-");//instancia o scanner para leitura do arquivo separado pelo delimitador -
 			
@@ -110,13 +110,14 @@ public class ManipulaArquivo implements Arquivavel{
 				lista.add(produto);	//adiciona o produto criado a lista de Produtos
 			}
 			
-			input.close();
 		} catch (FileNotFoundException fileNotFoundException) {
-			JOptionPane.showMessageDialog(null, "Arquivo não encontrado!");
+			JOptionPane.showMessageDialog(null, "Arquivo nao encontrado!");
 			return null;
 		} catch(InputMismatchException inputMismatchException){
 			JOptionPane.showMessageDialog(null, "Erro ao carregar arquivo");
 			return null;
+		}finally{
+			input.close();
 		}
 		
 		
@@ -125,7 +126,7 @@ public class ManipulaArquivo implements Arquivavel{
 	}//fim do metodo carrega lista de produtos
 
 	/**
-	 * @return lista de ItemDeContato garçon para ser carregado no programa
+	 * @return lista de ItemDeContato garcon para ser carregado no programa
 	 */
 	public List<ItemDoRestaurante> carregaListaDeGarcons() {
 		
@@ -135,16 +136,16 @@ public class ManipulaArquivo implements Arquivavel{
 			File arquivo = new File("Garcons.txt");//abre o arquivo
 			Scanner input;
 			try {
-				input = new Scanner(arquivo).useDelimiter("\\-");//lê o arquivo com scanner
+				input = new Scanner(arquivo).useDelimiter("\\-");//le o arquivo com scanner
 				while(input.hasNext()){
 					
 					garcon = new Garcon(Integer.parseInt(input.next()), input.nextLine().replace("-",""));//cria um novo objeto garcon
-					lista.add(garcon);//adiciona o objeto garçon à lista
+					lista.add(garcon);//adiciona o objeto garcon a lista
 				}
 				
 				input.close();
 			}catch (FileNotFoundException fileNotFoundException) {
-				JOptionPane.showMessageDialog(null, "Arquivo não encontrado!");
+				JOptionPane.showMessageDialog(null, "Arquivo nao encontrado!");
 				return null;
 			} catch(InputMismatchException inputMismatchException){
 				JOptionPane.showMessageDialog(null, "Erro ao carregar arquivo");
@@ -153,5 +154,5 @@ public class ManipulaArquivo implements Arquivavel{
 			
 			return lista;
 		
-	}//fim do método carregaListaDeGarcon
+	}//fim do metodo carregaListaDeGarcon
 }

@@ -3,7 +3,9 @@
  */
 package manage;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.Set;
 
 import util.Garcon;
 import util.ItemDoRestaurante;
+import util.Pedido;
+import util.Produto;
 import arquivos.ManipulaArquivo;
 
 /* Aluno: Carlos Alberto de Amorim Porto - 121085031  */
@@ -63,7 +67,7 @@ public class GerenteCaixa {
 			+ "|_ 3 - Excluir garcon;" + System.lineSeparator()
 			+ "|_ 4 - Voltar." + System.lineSeparator()
 			+ "Opcao desejada: ";
-	
+
 	private final String PROMPT_OPCAO_4 = System.lineSeparator()
 			+ "Movimento do Caixa" + System.lineSeparator()
 			;
@@ -79,16 +83,16 @@ public class GerenteCaixa {
 	public GerenteCaixa(){
 		this.setDinheiroEmCaixa(0.0);
 		this.setCaixaAberto(false);
-		
+
 		entrada = new Scanner(System.in);
 		arquivador = new ManipulaArquivo();
-	
+
 		listaDeProdutosCadastrados = arquivador.carregaListaDeProdutos();
 		listaDeGarconsDoRestaurante = arquivador.carregaListaDeGarcons();
 		registrosDeMovimentacao = new ArrayList<String>();
 		produtosConsumidos = new HashMap<String, Integer>();
 	}
-	
+
 	/**
 	 * Modifica o estado do caixa.
 	 * 
@@ -107,7 +111,7 @@ public class GerenteCaixa {
 		if(dinheiro >=0)
 			this.dinheiroEmCaixa += dinheiro;
 	}
-	
+
 	/**
 	 * Modulo de gerencia de produtos, responsável por cadastrar produtos na cozinha,
 	 * editar e remover produtos da mesma.
@@ -175,6 +179,7 @@ public class GerenteCaixa {
 				this.setDinheiroEmCaixa(dinheiro);;
 				this.setCaixaAberto(true);
 				sucesso = true;
+				System.out.println("Caixa aberto com sucesso!");
 			}
 		}
 	}
@@ -184,10 +189,111 @@ public class GerenteCaixa {
 	 */
 	private void movimentaCaixa(){
 		if(caixaAberto){
-			// TODO
+			System.out.println(PROMPT_OPCAO_4);
+			Pedido pedido;
+			boolean temMaisPedidos = true;
+			while(temMaisPedidos){
+				pedido = recebePedido();
+				pagaConta(pedido);
+				System.out.println("Mais algum pedido (s/n)? ");
+				String resposta = entrada.next();
+				if(resposta.equals("n")){
+					temMaisPedidos = false;
+				}
+			}
 		}
 		else
 			System.out.println("Caixa fechado. Abra o Caixa antes de movimenta-lo.");
+	}
+
+	/**
+	 * Recebe todas as informacoes referentesao pedido do cliente.
+	 * @return O pedido do cliente
+	 */
+	private Pedido recebePedido(){
+		Pedido pedido;
+		List<Produto> produtosDoPedido = new ArrayList<Produto>();
+		System.out.println("Pedido No: ");
+		int numeroDoPedido = entrada.nextInt();
+		System.out.println("Codigo do garcon: ");
+		int codigoGarcon = entrada.nextInt();
+		Garcon garcon = new Garcon(codigoGarcon, "");
+		System.out.println(listaDeGarconsDoRestaurante.get(listaDeGarconsDoRestaurante.indexOf(garcon)));
+		int temProduto = 0;
+		while(temProduto != -1){
+			System.out.println("Codigo do produto: ");
+			int codigo = entrada.nextInt();
+			produtosDoPedido.add((Produto) listaDeProdutosCadastrados.get(listaDeProdutosCadastrados.indexOf(new Produto(codigo,"", 0.0))));
+
+			System.out.println("Mais algum produto (s/n)? ");
+			String resposta = entrada.next();
+			if(resposta.equals("n")){
+				temProduto = -1;
+			}
+		}
+		pedido = new Pedido(numeroDoPedido, codigoGarcon,  produtosDoPedido.toArray(new Produto[produtosDoPedido.size()]));
+		return pedido;
+
+	}
+
+
+	/**
+	 * Processa o pedido do cliente pagando a conta e gerando os relatorios.
+	 * @param pedido O pedido a ser processado
+	 */
+	private void pagaConta(Pedido pedido){
+		double subtotal = 0.0;
+		Produto[] listaDeProdutos = pedido.getProdutosConsumidos();
+		for(int i = 0; i < listaDeProdutos.length; i++){
+			subtotal += listaDeProdutos[i].getPreco();
+		}
+		Garcon garcon = (Garcon) listaDeGarconsDoRestaurante.get(listaDeGarconsDoRestaurante.indexOf(new Garcon(pedido.getCodigoDoGarcon(), "")));
+		double gorjeta = subtotal/10;
+		garcon.setGorjeta(gorjeta);
+		double total = subtotal + gorjeta;
+		System.out.println(
+				"Subtotal: R$ " + subtotal + System.lineSeparator() +
+				"Gorjeta: R$ " + gorjeta + System.lineSeparator() +
+				"Total: R$ " + total);
+		System.out.println(
+				"Meio de pagamento:" + System.lineSeparator() +
+				"1 - Dinheiro;" + System.lineSeparator() +
+				"2 - Cheque;" + System.lineSeparator() +
+				"3 - Cartao." + System.lineSeparator() +
+				"Opcao: ");
+		int opcao = entrada.nextInt();
+		switch(opcao){
+		case 1:
+			System.out.println("Recebido: ");
+			double dinheiro = entrada.nextDouble();
+			double troco = dinheiro - total;
+			if(troco > dinheiroEmCaixa){
+				System.out.println("Dinheiro em caixa insuficiente para troco.");
+			}
+			else if(troco < 0){
+				System.out.println("Falta " + (total - dinheiro) + " para completar o pagamento." );
+			}
+			else{
+				dinheiroEmCaixa += total;
+				totalArrecadado += total;
+				System.out.println("Troco: R$" + troco);
+			}
+			break;
+		case 2:
+			System.out.println("Pagamento em cheque.");
+			dinheiroEmCaixa += total;
+			totalArrecadado += total;
+			break;
+		case 3:
+			System.out.println("Pagamento em cartao.");
+			dinheiroEmCaixa += total;
+			totalArrecadado += total;
+			break;
+		}
+		// TODO balanco
+		Date data = new Date();
+		SimpleDateFormat dataFormatada = new SimpleDateFormat("d/M/y H:m");
+		registrosDeMovimentacao.add(dataFormatada.format(data) + " - " + pedido.getNumero() + " R$ " + total);
 	}
 
 	/**
@@ -229,14 +335,14 @@ public class GerenteCaixa {
 			opcao6 = entrada.nextInt();
 		}// fim do while
 	}
-	
+
 	/**
 	 * Exibe os produtos mais e menos consumidos no restaurante.
 	 */
 	private void consumoDosProdutos(){
 		Set<String> chaves = produtosConsumidos.keySet();
 		Iterator<String> iterador = chaves.iterator();
-		
+
 		String produtoMaisConsumido = "";
 		String produtoMenosConsumido = "";
 		Integer maisConsumido = 0;
@@ -274,22 +380,25 @@ public class GerenteCaixa {
 	 * Fecha o caixa do restaurante.
 	 */
 	private void fechaCaixa(){
-		if(caixaAberto){
-			arquivador.salvaLista(listaDeProdutosCadastrados);
-			arquivador.salvaLista(listaDeGarconsDoRestaurante);
-			
-			entrada.close();
+		System.out.println("Fechando caixa...");
+		arquivador.salvaLista(listaDeProdutosCadastrados);
+		arquivador.salvaLista(listaDeGarconsDoRestaurante);
+		entrada.close();
+
+		if(caixaAberto){	
 			this.setCaixaAberto(false);
 		}
 		else
 			System.out.println("Caixa não está aberto.");
+
+		System.out.println("Caixa fechado. Saindo do sistema...");
 	}
 
 	/**
 	 * Modulo principal que gerencia o funcionamento do restaurante.
 	 */
 	public void run() {
-		
+
 		// Menu principal
 		System.out.println(PROMPT_GERAL);
 		int opcao = entrada.nextInt();
