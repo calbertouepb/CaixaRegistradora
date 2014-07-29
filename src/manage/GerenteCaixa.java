@@ -30,18 +30,28 @@ import arquivos.ManipulaArquivo;
  */
 public class GerenteCaixa {
 
-	// Total de dinheiro disponivel no Caixa.
+	// Total de dinheiro disponivel no Caixa e total de dinheiro arrecadado com os pedidos.
 	private double dinheiroEmCaixa, totalArrecadado;
+
 	// Estado do Caixa.
 	private boolean caixaAberto;
 
-	private Scanner entradaInteiro, entradaTexto, entradaDouble;
+	// Scanners de entrada de dados.
+	private Scanner entradaTexto;
+
+	// Arquivador de dados em arquivo.
 	private ManipulaArquivo arquivador;
 
+	// Lista de produtos e garcons
 	private List<ItemDoRestaurante> listaDeProdutosCadastrados, listaDeGarconsDoRestaurante;
+
+	// Entradas do balanco
 	private List<String> registrosDeMovimentacao;
+
+	// relacao de produtos e quantidades consumidas
 	private Map<String, Integer> produtosConsumidos;
 
+	// Mensagens
 	private final String PROMPT_GERAL = System.lineSeparator()
 			+ "Caixa de Restaurante" + System.lineSeparator()
 			+ "|_ 1 - Gerenciar produtos;" + System.lineSeparator()
@@ -52,7 +62,7 @@ public class GerenteCaixa {
 			+ "|_ 6 - Relatorios;" + System.lineSeparator()
 			+ "|_ 7 - Fechar Caixa e Sair." + System.lineSeparator()
 			+ "Opcao desejada: ";
-	
+
 	private final String PROMPT_OPCAO_1 = System.lineSeparator()
 			+ "Gerenciar produto" + System.lineSeparator()
 			+ "|_ 1 - Cadastrar produto;" + System.lineSeparator()
@@ -60,7 +70,7 @@ public class GerenteCaixa {
 			+ "|_ 3 - Excluir produto;" + System.lineSeparator()
 			+ "|_ 4 - Voltar." + System.lineSeparator()
 			+ "Opcao desejada: ";
-	
+
 	private final String PROMPT_OPCAO_2 = System.lineSeparator()
 			+ "Gerenciar garcons" + System.lineSeparator()
 			+ "|_ 1 - Cadastrar garcon;" + System.lineSeparator()
@@ -71,7 +81,7 @@ public class GerenteCaixa {
 
 	private final String PROMPT_OPCAO_4 = System.lineSeparator()
 			+ "Movimento do Caixa" + System.lineSeparator();
-	
+
 	private final String PROMPT_OPCAO_6 = System.lineSeparator()
 			+ "Relatorios" + System.lineSeparator()
 			+ "|_ 1 - Listar produtos;" + System.lineSeparator()
@@ -81,13 +91,14 @@ public class GerenteCaixa {
 			+ "|_ 5 - Voltar." + System.lineSeparator()
 			+ "Opcao desejada: ";
 
+	/**
+	 * Inicia o gerente e todas as suas variaveis de instancia.
+	 */
 	public GerenteCaixa(){
 		this.setDinheiroEmCaixa(0.0);
 		this.setCaixaAberto(false);
 
-		entradaInteiro = new Scanner(System.in);
 		entradaTexto = new Scanner(System.in);
-		entradaDouble = new Scanner(System.in);
 		arquivador = new ManipulaArquivo();
 
 		listaDeProdutosCadastrados = arquivador.carregaListaDeProdutos();
@@ -111,7 +122,7 @@ public class GerenteCaixa {
 	 * @param dinheiro Total de dinheiro no caixa.
 	 */
 	private void setDinheiroEmCaixa(double dinheiro) {
-		if(dinheiro >=0)
+		if(dinheiro >= 0)
 			this.dinheiroEmCaixa += dinheiro;
 	}
 
@@ -121,7 +132,7 @@ public class GerenteCaixa {
 	 */
 	private void gerenciaProduto(){
 		System.out.println(PROMPT_OPCAO_1);
-		int opcao1 = entradaInteiro.nextInt();
+		int opcao1 = recebeInteiro();
 		while(opcao1 != 4){
 			switch(opcao1){
 			case 1:
@@ -134,11 +145,11 @@ public class GerenteCaixa {
 				Cozinha.excluirProduto(listaDeProdutosCadastrados);
 				break;
 			default:
-				System.out.println("Opcao invalida.");
+				System.out.println("Opcao invalida. Digite apenas numeros entre 1 e 4.");
 				break;
 			}// fim do switch
 			System.out.println(PROMPT_OPCAO_1);
-			opcao1 = entradaInteiro.nextInt();
+			opcao1 = recebeInteiro();
 		}// fim do while
 	}
 
@@ -148,7 +159,7 @@ public class GerenteCaixa {
 	 */
 	private void gerenciaGarcon(){
 		System.out.println(PROMPT_OPCAO_2);
-		int opcao2 = entradaInteiro.nextInt();
+		int opcao2 = recebeInteiro();
 		while(opcao2 != 4){
 			switch(opcao2){
 			case 1:
@@ -161,11 +172,11 @@ public class GerenteCaixa {
 				Escritorio.excluirGarcon(listaDeGarconsDoRestaurante);
 				break;
 			default:
-				System.out.println("Opcao invalida.");
+				System.out.println("Opcao invalida. Digite apenas numeros entre 1 e 4.");
 				break;
 			}// fim do switch
 			System.out.println(PROMPT_OPCAO_2);
-			opcao2 = entradaInteiro.nextInt();
+			opcao2 = recebeInteiro();
 		}// fim do while
 	}
 
@@ -173,18 +184,21 @@ public class GerenteCaixa {
 	 * Abre o caixa do restaurante adicionando o quanto de dinheiro estará disponível.
 	 */
 	private void abreCaixa(){
-		boolean sucesso = false;
-		while(!sucesso){
+		if(!caixaAberto){
+			double dinheiro = 0.0;
 			System.out.println("Abrindo Caixa...");
 			System.out.println("Digite a quantidade de dinheiro no Caixa: ");
-			double dinheiro = entradaDouble.nextDouble();
+			dinheiro = recebeDouble();
 			if(dinheiro > 0.0){
-				this.setDinheiroEmCaixa(dinheiro);;
+				this.setDinheiroEmCaixa(dinheiro);
 				this.setCaixaAberto(true);
-				sucesso = true;
 				System.out.println("Caixa aberto com sucesso!");
 			}
+			else
+				System.out.println("Valores negativos nao sao permitidos.");
 		}
+		else
+			System.out.println("Caixa ja esta aberto.");
 	}
 
 	/**
@@ -194,14 +208,21 @@ public class GerenteCaixa {
 		if(caixaAberto){
 			System.out.println(PROMPT_OPCAO_4);
 			boolean temMaisPedidos = true;
-			while(temMaisPedidos){
-				pagaConta(recebePedido());
-				System.out.println("Mais algum pedido (s/n)? ");
-				String resposta = entradaTexto.nextLine();
-				if(resposta.equals("n")){
+			String resposta = "s";
+			do{
+				switch(resposta){
+				case "s":
+					pagaConta(recebePedido());
+					System.out.println("Mais algum pedido (s/n)? ");
+					resposta = entradaTexto.next();
+					break;
+				case "n":
 					temMaisPedidos = false;
+					break;
+				default:
+					System.out.println("Entrada inválida. Responda 's' ou 'n'");
 				}
-			}
+			}while(temMaisPedidos);
 		}
 		else
 			System.out.println("Caixa fechado. Abra o Caixa antes de movimenta-lo.");
@@ -212,46 +233,89 @@ public class GerenteCaixa {
 	 * @return O pedido do cliente
 	 */
 	private Pedido recebePedido(){
-		Pedido pedido;
 		List<Produto> produtosDoPedido = new ArrayList<Produto>();
+		
 		System.out.println("Pedido No: ");
-		int numeroDoPedido = entradaInteiro.nextInt();
+		int numeroDoPedido = recebeInteiro();
+		
 		System.out.println("Codigo do garcon: ");
-		int codigoGarcon = entradaInteiro.nextInt();
+		int codigoGarcon = recebeInteiro();
 		while(!Escritorio.garconsCadastrados.contains(codigoGarcon)){
-			System.out.println("Codigo do garcon: ");
-			codigoGarcon = entradaInteiro.nextInt();
+			System.out.println("Codigo invalido.\nCodigo do garcon: ");
+			codigoGarcon = recebeInteiro();
 		}
 		Garcon garcon = new Garcon(codigoGarcon, "");
 		garcon = (Garcon) listaDeGarconsDoRestaurante.get(listaDeGarconsDoRestaurante.indexOf(garcon));
 		System.out.printf("%03d - %s%n", garcon.getCodigo(), garcon.getNome());
-		int temProduto = 0;
-		while(temProduto != -1){
-			System.out.println("Codigo do produto: ");
-			int codigo = entradaInteiro.nextInt();
-			if(Cozinha.produtosCadastrados.contains(codigo)){
-				produtosDoPedido.add((Produto) listaDeProdutosCadastrados.get(listaDeProdutosCadastrados.indexOf(new Produto(codigo,"", 0.0))));
-			}
-			else
-				System.out.println("Este produto nao esta cadastrado.");
-
-			System.out.println("Mais algum produto (s/n)? ");
-			String resposta = entradaInteiro.next();
-			if(resposta.equals("n")){
-				temProduto = -1;
-			}
-		}
 		
+		boolean temProduto = true;
+		String resposta = "s";
+		do{
+			switch(resposta){
+			case "s":
+				System.out.println("Codigo do produto: ");
+
+				int codigo = recebeInteiro();
+				if(Cozinha.produtosCadastrados.contains(codigo)){
+					produtosDoPedido.add((Produto) listaDeProdutosCadastrados.get(listaDeProdutosCadastrados.indexOf(new Produto(codigo,"", 0.0))));
+				}
+				else
+					System.out.println("Este produto nao esta cadastrado.");
+
+				System.out.println("Mais algum produto (s/n)? ");
+				resposta = entradaTexto.next();
+				break;
+			case "n":
+				temProduto = false;
+				break;
+			default:
+				System.out.println("Entrada invalida. Responda apenas 's' ou 'n'");
+			}
+		}while(temProduto);
+
 		atualizaProdutosConsumidos(produtosDoPedido);
-		pedido = new Pedido(numeroDoPedido, codigoGarcon,  produtosDoPedido.toArray(new Produto[produtosDoPedido.size()]));
-		return pedido;
+		return new Pedido(numeroDoPedido, codigoGarcon,  produtosDoPedido.toArray(new Produto[produtosDoPedido.size()]));
 
 	}
 
+	/**
+	 * Retorna um numero inteiro da entrada padrao.
+	 * @return Um numero inteiro
+	 */
+	private int recebeInteiro() {
+		int numero = 0;
+		boolean sucesso = false;
+		while(!sucesso){
+			try{
+				numero = Integer.parseInt(entradaTexto.nextLine());
+				sucesso = true;
+			}catch(NumberFormatException e){
+				System.out.println("Entrada invalida. Digite apenas numeros maiores que 0.");
+			}
+		}
+		return numero;
+	}
+	
+	/**
+	 * Retorna um Double da entrada padrao.
+	 * @return Um Double
+	 */
+	private double recebeDouble() {
+		double numero = 0;
+		boolean sucesso = false;
+		while(!sucesso){
+			try{
+				numero = Double.parseDouble(entradaTexto.nextLine());
+				sucesso = true;
+			}catch(NumberFormatException e){
+				System.out.println("Entrada invalida. Digite apenas numeros maiores que 0.");
+			}
+		}
+		return numero;
+	}
 
 	/**
 	 * Atualiza o mapa de consumo de produtos.
-	 * 
 	 * @param produtosDoPedido A lista de produtos consumidos no pedido.
 	 */
 	private void atualizaProdutosConsumidos(List<Produto> produtosDoPedido) {
@@ -287,22 +351,22 @@ public class GerenteCaixa {
 				"2 - Cheque;" + System.lineSeparator() +
 				"3 - Cartao." + System.lineSeparator() +
 				"Opcao: ");
-		int opcao = entradaInteiro.nextInt();
+		int opcao = recebeInteiro();
 		switch(opcao){
 		case 1:
 			System.out.println("Recebido: ");
-			double dinheiro = entradaDouble.nextDouble();
+			double dinheiro = recebeDouble();
 			double troco = dinheiro - total;
 			if(troco > dinheiroEmCaixa){
 				System.out.println("Dinheiro em caixa insuficiente para troco.");
 			}
 			else if(troco < 0){
-				System.out.println("Falta " + (total - dinheiro) + " para completar o pagamento." );
+				System.out.printf("Falta %.2f para completar o pagamento.", (total - dinheiro));
 			}
 			else{
 				dinheiroEmCaixa += total;
 				totalArrecadado += total;
-				System.out.println("Troco: R$" + troco);
+				System.out.printf("Troco: R$ %.2f%n", troco);
 			}
 			break;
 		case 2:
@@ -316,10 +380,10 @@ public class GerenteCaixa {
 			totalArrecadado += total;
 			break;
 		}
-		
+
 		Date data = new Date();
 		SimpleDateFormat dataFormatada = new SimpleDateFormat("d/M/y H:m");
-		registrosDeMovimentacao.add(dataFormatada.format(data) + " - " + pedido.getNumero() + " R$ " + total);
+		registrosDeMovimentacao.add(dataFormatada.format(data) + " | " + String.format("%03d | R$ %.2f", pedido.getNumero(), total));
 	}
 
 	/**
@@ -329,8 +393,8 @@ public class GerenteCaixa {
 		Iterator<String> iterador = registrosDeMovimentacao.iterator();
 		while(iterador.hasNext()){
 			System.out.println(iterador.next());
-			System.out.println("Total arrecadado: " + totalArrecadado);
 		}
+		System.out.printf("Total arrecadado: R$ %.2f", totalArrecadado);
 	}
 
 	/**
@@ -338,7 +402,7 @@ public class GerenteCaixa {
 	 */
 	private void relatorios(){
 		System.out.println(PROMPT_OPCAO_6);
-		int opcao6 = entradaInteiro.nextInt();
+		int opcao6 = recebeInteiro();
 		while(opcao6 != 5){
 			switch(opcao6){
 			case 1:
@@ -358,7 +422,7 @@ public class GerenteCaixa {
 				break;
 			}// fim do switch
 			System.out.println(PROMPT_OPCAO_6);
-			opcao6 = entradaInteiro.nextInt();
+			opcao6 = recebeInteiro();
 		}// fim do while
 	}
 
@@ -380,7 +444,7 @@ public class GerenteCaixa {
 				if(quantidade > maisConsumido){
 					produtoMaisConsumido = entrada;
 					maisConsumido = quantidade;
-					
+
 				}
 				if(quantidade < menosConsumido){
 					produtoMenosConsumido = entrada;
@@ -392,7 +456,7 @@ public class GerenteCaixa {
 				System.out.println("Produto menos consumido: " + produtoMenosConsumido + System.lineSeparator() + "Quantidade: " + menosConsumido + System.lineSeparator() + System.lineSeparator());
 			}
 			else
-				System.out.println("Não ná produtos consumidos.");
+				System.out.println("Não ha produtos consumidos.");
 		}
 		else
 			System.out.println("Caixa fechado. Nao existe nenhuma movimentacao de produto do restaurante.");
@@ -403,7 +467,7 @@ public class GerenteCaixa {
 	 */
 	private void gorjetas(){
 		System.out.println("Codigo do garcon: ");
-		int codigo = entradaInteiro.nextInt();
+		int codigo = recebeInteiro();
 		Garcon garcon = new Garcon(codigo, "");
 		if(listaDeGarconsDoRestaurante.contains(garcon)){
 			garcon = (Garcon) listaDeGarconsDoRestaurante.get(listaDeGarconsDoRestaurante.indexOf(garcon));
@@ -420,10 +484,8 @@ public class GerenteCaixa {
 		System.out.println("Fechando caixa...");
 		arquivador.salvaLista(listaDeProdutosCadastrados);
 		arquivador.salvaLista(listaDeGarconsDoRestaurante);
-		entradaInteiro.close();
 		entradaTexto.close();
-		entradaDouble.close();
-
+		
 		if(caixaAberto){	
 			this.setCaixaAberto(false);
 		}
@@ -438,12 +500,12 @@ public class GerenteCaixa {
 	 */
 	public void run() {
 
-		// Menu principal
-		System.out.println(PROMPT_GERAL);
-		int opcao = entradaInteiro.nextInt();
+		int opcao;
 
 		// Execucao do programa
-		while(opcao != 7){
+		do{
+			System.out.println(PROMPT_GERAL);
+			opcao = recebeInteiro();
 			switch(opcao){
 			case 1:
 				gerenciaProduto();
@@ -463,14 +525,14 @@ public class GerenteCaixa {
 			case 6:
 				relatorios();
 				break;
+			case 7:
+				fechaCaixa();
+				System.exit(0);
 			default:
-				System.out.println("Opcao invalida.");
+				System.out.println("Opcao invalida. Digite apenas numeros entre 1 e 7.");
 				break;
 			}// fim do switch
-			System.out.println(PROMPT_GERAL);
-			opcao = entradaInteiro.nextInt();
-		}// fim do while
+		}while(true);// fim do while
 
-		fechaCaixa();
 	}
 }

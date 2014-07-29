@@ -1,5 +1,7 @@
+/**
+ * File: ManipulaArquivo.java
+ */
 package arquivos;
-
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -33,13 +35,6 @@ public class ManipulaArquivo implements Arquivavel{
 	File fileGarcon = new File(arquivoGarcon);
 	File fileProduto = new File(arquivoProduto);
 
-	/**
-	 * Salva os itens da lista recebida como parametro em arquivo.
-	 * 
-	 * @param lista A lista de itens do restaurante para salvar em arquivo
-	 * @return true se for salvo com sucesso
-	 */
-	@Override
 	public boolean salvaLista(List<ItemDoRestaurante> lista) {
 		
 		//Verifica se a lista e maior que zero
@@ -89,11 +84,6 @@ public class ManipulaArquivo implements Arquivavel{
 			
 	}//Fim do metodo arquiva
 
-	/**
-	 * Retorna as informacoes dos produtos do restaurante.
-	 * 
-	 * @return A lista de produtos para ser carregada na inicializacao do programa
-	 */
 	public List<ItemDoRestaurante> carregaListaDeProdutos() {
 		
 		List <ItemDoRestaurante> lista= new ArrayList<ItemDoRestaurante>();
@@ -115,11 +105,9 @@ public class ManipulaArquivo implements Arquivavel{
 			input.close();
 			
 		} catch (FileNotFoundException fileNotFoundException) {
-			JOptionPane.showMessageDialog(null, "Arquivo nao encontrado!");
-			return null;
+			System.out.println("Nao existe nenhum produto cadastrado. Cadastre os produtos antes de movimentar o caixa.");
 		} catch(InputMismatchException inputMismatchException){
-			JOptionPane.showMessageDialog(null, "Erro ao carregar arquivo");
-			return null;
+			System.out.println("Erro ao carregar os produtos cadastrados.");
 		}
 		
 		
@@ -127,11 +115,6 @@ public class ManipulaArquivo implements Arquivavel{
 		
 	}//fim do metodo carrega lista de produtos
 
-	/**
-	 * Retorna as informacoes dos garcons do restaurante.
-	 * 
-	 * @return A lista de garcons para ser carregada no programa
-	 */
 	public List<ItemDoRestaurante> carregaListaDeGarcons() {
 		
 			List <ItemDoRestaurante> lista= new ArrayList<ItemDoRestaurante>();
@@ -150,11 +133,9 @@ public class ManipulaArquivo implements Arquivavel{
 				
 				input.close();
 			}catch (FileNotFoundException fileNotFoundException) {
-				JOptionPane.showMessageDialog(null, "Arquivo nao encontrado!");
-				return null;
+				System.out.println("Nao existe nenhum garcon cadastrado. Cadastre os garcons antes de movimentar o caixa.");
 			} catch(InputMismatchException inputMismatchException){
-				JOptionPane.showMessageDialog(null, "Erro ao carregar arquivo");
-				return null;
+				System.out.println("Erro ao carregar os garcons cadastrados.");
 			}
 			
 			return lista;

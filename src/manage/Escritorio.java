@@ -22,7 +22,7 @@ import util.ItemDoRestaurante;
  */
 public class Escritorio {
 
-	//Entrada de dados
+	// Scanner de entrada de dados
 	private static Scanner entradaInteiro = new Scanner(System.in);
 	private static Scanner entradaTexto = new Scanner(System.in);
 	
@@ -116,5 +116,4 @@ public class Escritorio {
 		else
 			System.out.println("Nao existem garcons a serem exibidos.");
 	}
-
 }

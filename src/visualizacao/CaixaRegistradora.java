@@ -1,5 +1,5 @@
 /**
- * 
+ * File: CaixaRegistradora.java
  */
 package visualizacao;
 
@@ -16,11 +16,12 @@ import manage.GerenteCaixa;
 public class CaixaRegistradora {
 
 	/**
-	 * @param args
+	 * Metodo principal que executa o caixa.
+	 * 
+	 * @param args Argumentos da linha de comando.
 	 */
 	public static void main(String[] args) {
 		GerenteCaixa gerente = new GerenteCaixa();
 		gerente.run();
 	}
-
 }

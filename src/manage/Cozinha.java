@@ -22,7 +22,7 @@ import util.Produto;
  */
 public class Cozinha {
 	
-	//Entrada de dados
+	// Scanners de entrada de dados
 	private static Scanner entradaInteiro = new Scanner(System.in);
 	private static Scanner entradaTexto = new Scanner(System.in);
 	private static Scanner entradaDouble = new Scanner(System.in);
@@ -120,5 +120,4 @@ public class Cozinha {
 		else
 			System.out.println("Nao existem produtos a serem exibidos.");
 	}
-
 }

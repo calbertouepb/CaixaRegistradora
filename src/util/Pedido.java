@@ -26,7 +26,7 @@ public class Pedido {
 	/**
 	 * Pedido numerado e preenchido
 	 * @param numero O numero do pedido
-	 * @param codigo O codigo do garcon que anotou o pedido
+	 * @param garcon O codigo do garcon que anotou o pedido
 	 * @param produtosConsumidos Uma lista com os produtos consumidos
 	 */
 	public Pedido(int numero, int garcon, Produto[] produtosConsumidos){
