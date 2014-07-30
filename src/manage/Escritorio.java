@@ -23,7 +23,6 @@ import util.ItemDoRestaurante;
 public class Escritorio {
 
 	// Scanner de entrada de dados
-	private static Scanner entradaInteiro = new Scanner(System.in);
 	private static Scanner entradaTexto = new Scanner(System.in);
 	
 	public static List<Integer> garconsCadastrados = new ArrayList<Integer>();
@@ -39,7 +38,7 @@ public class Escritorio {
 	public static boolean cadastrarGarcon(List<ItemDoRestaurante> listaDeGarconsDoRestaurante) {
 
 		System.out.println("Codigo do garcon: ");
-		int codigo = entradaInteiro.nextInt();
+		int codigo = GerenteCaixa.recebeInteiro();
 		System.out.println("Nome do garcon: ");
 		String nome = entradaTexto.nextLine();
 		Garcon novoGarcon = new Garcon(codigo, nome);
@@ -63,7 +62,7 @@ public class Escritorio {
 	public static boolean editarGarcon(List<ItemDoRestaurante> listaDeGarconsDoRestaurante) {
 
 		System.out.println("Codigo do garcon: ");
-		int codigo = entradaInteiro.nextInt();
+		int codigo = GerenteCaixa.recebeInteiro();
 		Garcon garcon = new Garcon(codigo,"");
 		if(listaDeGarconsDoRestaurante.contains(garcon)){
 			System.out.println("Novo nome do garcon: ");
@@ -87,7 +86,7 @@ public class Escritorio {
 	public static boolean excluirGarcon(List<ItemDoRestaurante> listaDeGarconsDoRestaurante) {
 
 		System.out.println("Codigo do garcon: ");
-		int codigo = entradaInteiro.nextInt();
+		int codigo = GerenteCaixa.recebeInteiro();
 		Garcon garcon = new Garcon(codigo, "");
 		if(listaDeGarconsDoRestaurante.contains(garcon)){
 			listaDeGarconsDoRestaurante.remove(garcon);

@@ -23,9 +23,7 @@ import util.Produto;
 public class Cozinha {
 	
 	// Scanners de entrada de dados
-	private static Scanner entradaInteiro = new Scanner(System.in);
 	private static Scanner entradaTexto = new Scanner(System.in);
-	private static Scanner entradaDouble = new Scanner(System.in);
 	
 	public static List<Integer> produtosCadastrados = new ArrayList<Integer>();
 	
@@ -40,11 +38,11 @@ public class Cozinha {
 	public static boolean cadastrarProduto(List<ItemDoRestaurante> listaDeProdutosCadastrados) {
 		
 		System.out.println("Codigo do produto: ");
-		int codigo = entradaInteiro.nextInt();
+		int codigo = GerenteCaixa.recebeInteiro();
 		System.out.println("Descricao do produto: ");
 		String descricao = entradaTexto.nextLine();
 		System.out.println("Preco unitario: ");
-		double precoUnitario = entradaDouble.nextDouble();
+		double precoUnitario = GerenteCaixa.recebeDouble();
 		Produto novoProduto = new Produto(codigo, descricao, precoUnitario);
 		if(!listaDeProdutosCadastrados.contains(novoProduto)){
 			listaDeProdutosCadastrados.add(novoProduto);
@@ -66,11 +64,11 @@ public class Cozinha {
 	public static boolean editarProduto(List<ItemDoRestaurante> listaDeProdutosCadastrados) {
 
 		System.out.println("Codigo do produto: ");
-		int codigo = entradaInteiro.nextInt();
+		int codigo = GerenteCaixa.recebeInteiro();
 		System.out.println("Nova descricao do produto: ");
 		String novaDescricao = entradaTexto.nextLine();
 		System.out.println("Novo preco unitario: ");
-		double novoPreco = entradaDouble.nextDouble();
+		double novoPreco = GerenteCaixa.recebeDouble();
 		Produto novoProduto = new Produto(codigo, novaDescricao, novoPreco);
 		if(listaDeProdutosCadastrados.contains(novoProduto)){
 			listaDeProdutosCadastrados.set(listaDeProdutosCadastrados.indexOf(novoProduto), novoProduto);
@@ -91,7 +89,7 @@ public class Cozinha {
 	public static boolean excluirProduto(List<ItemDoRestaurante> listaDeProdutosCadastrados) {
 
 		System.out.println("Codigo do produto: ");
-		int codigo = entradaInteiro.nextInt();
+		int codigo = GerenteCaixa.recebeInteiro();
 		Produto produto = new Produto(codigo, "", 0.0);
 		if(listaDeProdutosCadastrados.contains(produto)){
 			listaDeProdutosCadastrados.remove(produto);

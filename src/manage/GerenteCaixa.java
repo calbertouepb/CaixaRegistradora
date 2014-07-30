@@ -37,7 +37,7 @@ public class GerenteCaixa {
 	private boolean caixaAberto;
 
 	// Scanners de entrada de dados.
-	private Scanner entradaTexto;
+	private static Scanner entradaTexto, entradaNumerica;
 
 	// Arquivador de dados em arquivo.
 	private ManipulaArquivo arquivador;
@@ -48,8 +48,11 @@ public class GerenteCaixa {
 	// Entradas do balanco
 	private List<String> registrosDeMovimentacao;
 
-	// relacao de produtos e quantidades consumidas
+	// Relacao de produtos e quantidades consumidas
 	private Map<String, Integer> produtosConsumidos;
+
+	// Pedidos processados
+	private List<Integer> pedidos;
 
 	// Mensagens
 	private final String PROMPT_GERAL = System.lineSeparator()
@@ -99,12 +102,59 @@ public class GerenteCaixa {
 		this.setCaixaAberto(false);
 
 		entradaTexto = new Scanner(System.in);
+		entradaNumerica = new Scanner(System.in);
 		arquivador = new ManipulaArquivo();
 
 		listaDeProdutosCadastrados = arquivador.carregaListaDeProdutos();
 		listaDeGarconsDoRestaurante = arquivador.carregaListaDeGarcons();
 		registrosDeMovimentacao = new ArrayList<String>();
 		produtosConsumidos = new HashMap<String, Integer>();
+		pedidos = new ArrayList<Integer>();
+		totalArrecadado = 0.0;
+	}
+
+	/**
+	 * Retorna um numero inteiro da entrada padrao.
+	 * @return Um numero inteiro
+	 */
+	static int recebeInteiro() {
+		int numero = 0;
+		boolean sucesso = false;
+		while(!sucesso){
+			try{
+				numero = Integer.parseInt(entradaNumerica.nextLine());
+				if(numero > 0){
+					sucesso = true;
+				}
+				else
+					throw new NumberFormatException();
+			}catch(NumberFormatException e){
+				System.out.println("Entrada invalida. Digite apenas numeros maiores que 0.");
+			}
+		}
+		return numero;
+	}
+
+	/**
+	 * Retorna um Double da entrada padrao.
+	 * @return Um Double
+	 */
+	static double recebeDouble() {
+		double numero = 0;
+		boolean sucesso = false;
+		while(!sucesso){
+			try{
+				numero = Double.parseDouble(entradaNumerica.nextLine());
+				if(numero > 0){
+					sucesso = true;
+				}
+				else
+					throw new NumberFormatException();
+			}catch(NumberFormatException e){
+				System.out.println("Entrada invalida. Digite apenas numeros maiores que 0.");
+			}
+		}
+		return numero;
 	}
 
 	/**
@@ -189,13 +239,9 @@ public class GerenteCaixa {
 			System.out.println("Abrindo Caixa...");
 			System.out.println("Digite a quantidade de dinheiro no Caixa: ");
 			dinheiro = recebeDouble();
-			if(dinheiro > 0.0){
-				this.setDinheiroEmCaixa(dinheiro);
-				this.setCaixaAberto(true);
-				System.out.println("Caixa aberto com sucesso!");
-			}
-			else
-				System.out.println("Valores negativos nao sao permitidos.");
+			this.setDinheiroEmCaixa(dinheiro);
+			this.setCaixaAberto(true);
+			System.out.println("Caixa aberto com sucesso!");
 		}
 		else
 			System.out.println("Caixa ja esta aberto.");
@@ -210,17 +256,19 @@ public class GerenteCaixa {
 			boolean temMaisPedidos = true;
 			String resposta = "s";
 			do{
+				while(!resposta.equals("s") && !resposta.equals("n")){
+					System.out.println("Entrada inválida. Responda 's' ou 'n'");
+					resposta = entradaTexto.nextLine();
+				}
 				switch(resposta){
 				case "s":
 					pagaConta(recebePedido());
 					System.out.println("Mais algum pedido (s/n)? ");
-					resposta = entradaTexto.next();
+					resposta = entradaTexto.nextLine();
 					break;
 				case "n":
 					temMaisPedidos = false;
 					break;
-				default:
-					System.out.println("Entrada inválida. Responda 's' ou 'n'");
 				}
 			}while(temMaisPedidos);
 		}
@@ -234,10 +282,13 @@ public class GerenteCaixa {
 	 */
 	private Pedido recebePedido(){
 		List<Produto> produtosDoPedido = new ArrayList<Produto>();
-		
+
 		System.out.println("Pedido No: ");
 		int numeroDoPedido = recebeInteiro();
-		
+		while(numeroDoPedido < 1 || pedidos.contains(numeroDoPedido)){
+			System.out.println("Numero invalido.\nPedido No: ");
+			numeroDoPedido = recebeInteiro();
+		}
 		System.out.println("Codigo do garcon: ");
 		int codigoGarcon = recebeInteiro();
 		while(!Escritorio.garconsCadastrados.contains(codigoGarcon)){
@@ -247,10 +298,14 @@ public class GerenteCaixa {
 		Garcon garcon = new Garcon(codigoGarcon, "");
 		garcon = (Garcon) listaDeGarconsDoRestaurante.get(listaDeGarconsDoRestaurante.indexOf(garcon));
 		System.out.printf("%03d - %s%n", garcon.getCodigo(), garcon.getNome());
-		
+
 		boolean temProduto = true;
 		String resposta = "s";
 		do{
+			while(!resposta.equals("s") && !resposta.equals("n")){
+				System.out.println("Entrada inválida. Responda 's' ou 'n'");
+				resposta = entradaTexto.nextLine();
+			}
 			switch(resposta){
 			case "s":
 				System.out.println("Codigo do produto: ");
@@ -263,55 +318,18 @@ public class GerenteCaixa {
 					System.out.println("Este produto nao esta cadastrado.");
 
 				System.out.println("Mais algum produto (s/n)? ");
-				resposta = entradaTexto.next();
+				resposta = entradaTexto.nextLine();
 				break;
 			case "n":
 				temProduto = false;
 				break;
-			default:
-				System.out.println("Entrada invalida. Responda apenas 's' ou 'n'");
 			}
 		}while(temProduto);
 
 		atualizaProdutosConsumidos(produtosDoPedido);
+		pedidos.add(numeroDoPedido);
 		return new Pedido(numeroDoPedido, codigoGarcon,  produtosDoPedido.toArray(new Produto[produtosDoPedido.size()]));
 
-	}
-
-	/**
-	 * Retorna um numero inteiro da entrada padrao.
-	 * @return Um numero inteiro
-	 */
-	private int recebeInteiro() {
-		int numero = 0;
-		boolean sucesso = false;
-		while(!sucesso){
-			try{
-				numero = Integer.parseInt(entradaTexto.nextLine());
-				sucesso = true;
-			}catch(NumberFormatException e){
-				System.out.println("Entrada invalida. Digite apenas numeros maiores que 0.");
-			}
-		}
-		return numero;
-	}
-	
-	/**
-	 * Retorna um Double da entrada padrao.
-	 * @return Um Double
-	 */
-	private double recebeDouble() {
-		double numero = 0;
-		boolean sucesso = false;
-		while(!sucesso){
-			try{
-				numero = Double.parseDouble(entradaTexto.nextLine());
-				sucesso = true;
-			}catch(NumberFormatException e){
-				System.out.println("Entrada invalida. Digite apenas numeros maiores que 0.");
-			}
-		}
-		return numero;
 	}
 
 	/**
@@ -390,10 +408,13 @@ public class GerenteCaixa {
 	 * Exibe o balanco do caixa ate o momento.
 	 */
 	private void balanco(){
-		Iterator<String> iterador = registrosDeMovimentacao.iterator();
-		while(iterador.hasNext()){
-			System.out.println(iterador.next());
-		}
+		if(!registrosDeMovimentacao.isEmpty()){
+			Iterator<String> iterador = registrosDeMovimentacao.iterator();
+			while(iterador.hasNext()){
+				System.out.println(iterador.next());
+			}
+		}else
+			System.out.println("Nao ha pedidos registrados no momento.");
 		System.out.printf("Total arrecadado: R$ %.2f", totalArrecadado);
 	}
 
@@ -485,7 +506,7 @@ public class GerenteCaixa {
 		arquivador.salvaLista(listaDeProdutosCadastrados);
 		arquivador.salvaLista(listaDeGarconsDoRestaurante);
 		entradaTexto.close();
-		
+
 		if(caixaAberto){	
 			this.setCaixaAberto(false);
 		}
